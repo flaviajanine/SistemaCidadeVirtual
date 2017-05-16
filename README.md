@@ -1,4 +1,4 @@
-# BigData
+# Sistema do Projeto Cidade Virtual
 
 ## Primeira versão
 * Front-end pronto;
