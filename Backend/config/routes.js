@@ -6,10 +6,6 @@ module.exports = function(server) {
   const router = express.Router()
   server.use('/api', router)
 
-  // rotas da API
-//  const Service = require('..')
-//  Service.register(router, '')
-
-  const billingSummaryService = require('')
- // router.route('').get()
+  const busInfoService = require('../api/busInfo/busInfoService')
+  busInfoService.register(router, '/eletronicos')
 }
