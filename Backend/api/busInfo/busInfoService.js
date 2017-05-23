@@ -1,12 +1,12 @@
 const _ = require('lodash')
-const Eletronico = require('./busInfo')
+const BusInfo = require('./busInfo')
 
-Eletronico.methods(['get', 'post', 'put', 'delete'])
+BusInfo.methods(['get', 'post', 'put', 'delete'])
 
 // retornar o valor novo quando der update
-Eletronico.updateOptions({new: true, runValidators: true})
+BusInfo.updateOptions({new: true, runValidators: true})
 
-Eletronico.after('post', sendErrorsOrNext).after('put', sendErrorsOrNext)
+BusInfo.after('post', sendErrorsOrNext).after('put', sendErrorsOrNext)
 
 function sendErrorsOrNext(req, res, next) {
   const bundle = res.locals.bundle
@@ -26,8 +26,8 @@ function parseErrors(nodeRestfulErrors) {
 }
 
 // padronizar os erros
-Eletronico.route('count', function(req, res, next) {
-  Eletronico.count(function(error, value) {
+BusInfo.route('count', function(req, res, next) {
+  BusInfo.count(function(error, value) {
     if(error) {
       // array de todos os erros
       res.status(500).json({errors: [error]})
@@ -37,4 +37,4 @@ Eletronico.route('count', function(req, res, next) {
   })
 })
 
-module.exports = Eletronico
+module.exports = BusInfo

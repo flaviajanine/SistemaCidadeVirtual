@@ -7,5 +7,8 @@ module.exports = function(server) {
   server.use('/api', router)
 
   const busInfoService = require('../api/busInfo/busInfoService')
-  busInfoService.register(router, '/eletronicos')
+  busInfoService.register(router, '/businfos')
+
+  const busInfoSummaryService = require('../api/busInfoSummary/busInfoSummaryService')
+  router.route('/busInfoSummary').get(busInfoSummaryService.getSummary)
 }
