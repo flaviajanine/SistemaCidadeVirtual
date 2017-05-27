@@ -1,4 +1,7 @@
+const mongoose = require('mongoose')
 const express = require('express')
+
+console.log(mongoose.connection.readyState);
 
 module.exports = function(server) {
 
@@ -7,8 +10,10 @@ module.exports = function(server) {
   server.use('/api', router)
 
   const busInfoService = require('../api/busInfo/busInfoService')
-  busInfoService.register(router, '/businfos')
+  busInfoService.register(router, '/SAB27052017')
 
   const busInfoSummaryService = require('../api/busInfoSummary/busInfoSummaryService')
   router.route('/busInfoSummary').get(busInfoSummaryService.getSummary)
 }
+
+
