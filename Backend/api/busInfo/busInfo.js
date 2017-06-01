@@ -15,5 +15,5 @@ const SAB27052017Schema = new mongoose.Schema({
   linha: { type: String, required: true}
 })
 
-module.exports = restful.model('BusInfo', SAB27052017Schema)
+module.exports = restful.model('SAB27052017', SAB27052017Schema)
   

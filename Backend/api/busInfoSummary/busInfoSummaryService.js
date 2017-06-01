@@ -1,18 +1,27 @@
 const _ = require('lodash')
-const BusInfo = require('../busInfo/busInfo')
+const SAB27052017 = require('../busInfo/busInfo')
+const mongoose = require('mongoose')
+
 
 // Mais uma função middleware
 function getSummary(req, res) {
-  
-BusInfo.findOne({},
-function(error, result) {
-    // padrão de erros
-    if(error) {
-      res.status(500).json({errors: [error]})
-    } else {
-      res.json(result)
-    }
-  })
 
+//SAB27052017.find({ "vs.py": { $lt: 0 } },
+SAB27052017.find({}, {'vs.py':1, 'vs.px':1},
+ 
+ 
+    function (error, result) {
+      // padrão de erros
+    if (error) {
+    res.status(500).json({ errors: [error] })
+  } else {
+    //console.log(result)
+    res.json(result)
+        
+     }
+   })
+
+console.log(mongoose.connection.readyState);
+ //console.log(res)
 }
-module.exports = { getSummary}
+module.exports = { getSummary }

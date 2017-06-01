@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "1.0.0",
+  "version": "",
   "description": "",
   "main": "loader.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "lodash": "^4.17.2",
     "mongoose": "^4.7.0",
     "mongoose-paginate": "^5.0.3",
+    "morgan": "^1.8.2",
     "node-restful": "^0.2.5",
     "pm2": "^2.1.5"
   },

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const express = require('express')
 
-console.log(mongoose.connection.readyState);
 
 module.exports = function(server) {
 

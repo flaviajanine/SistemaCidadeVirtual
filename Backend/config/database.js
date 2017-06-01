@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise
+mongoose.Promise = require('bluebird')
 module.exports = mongoose.connect('mongodb://10.97.0.11:27017/Marcelo2')
 
 mongoose.Error.messages.general.required = "O atributo '{PATH}' é obrigatório."

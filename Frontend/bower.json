@@ -3,9 +3,9 @@
   "homepage": "http://startbootstrap.com/template-overviews/sb-admin-2/",
   "version": "3.3.7+1",
   "authors": [
-    "David Miller"
+    "David Miller", "Flávia Janine"
   ],
-  "description": "A free, open source, Bootstrap admin theme created by Start Bootstrap",
+  "description": "A free, open source, Bootstrap created by Start Bootstrap",
   "keywords": [
     "bootstrap",
     "theme"
