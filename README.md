@@ -8,3 +8,7 @@
 ## Segunda versão
 * Começo dos estudos para implementação do back-end com node;
 * Organização das pastas.
+
+## Terceira versão
+* Back-end em python;
+
