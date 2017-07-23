@@ -14,9 +14,9 @@
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	
-	 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css' rel='stylesheet' />
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
     <!-- MetisMenu CSS -->
     <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
 
@@ -33,6 +33,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 	
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script> 
 	<style>
 	#map {
 		 position:absolute; 
@@ -278,58 +279,61 @@
                     <h1 class="page-header">Mapa de Calor</h1>
 					
                 </div>
-                <div id='map'></div>
+                <div class="col-lg-12" id='map'></div>
 					<script>
-					mapboxgl.accessToken = 'pk.eyJ1IjoiZmxhdmlhamFuaW5lIiwiYSI6ImNqMHRudHh5bzA0bm8zMm82bGVrZDRpcTcifQ.F7hk4e6AulGP36-yKX-xog';
-					var map = new mapboxgl.Map({
-					container: 'map',
-					style: 'mapbox://styles/mapbox/streets-v9',
-					center: [-46.607,-23.569], // starting position
-					zoom: 11 // starting zoom
+					L.mapbox.accessToken = 'pk.eyJ1IjoiZmxhdmlhamFuaW5lIiwiYSI6ImNqNWg3azAybDEwYTAyd3BncWx0azh4aHcifQ.QgJrzpH1OzgiyvNoPUPIuA';
+					var map = L.mapbox.map('map', 'mapbox.pencil', {maxZoom: 18, minZoom: 14})
+    .setView([-46.607,-23.569], 15);
+    
+    function project(latlng){
+      var array = [+latlng.lat, +latlng.lon]
+      var point = map.latLngToLayerPoint(L.latLng(latlng));
 
-					});	
-					map.on('load', function () {
+      return point;
+    }
+    
+    // Setup our svg layer that we can manipulate with d3
+    var svg = d3.select(map.getPanes().overlayPane)
+      .append("svg");
+    var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+    
+    d3.csv("dados.csv", function(err, data) {
+      //console.log("data:", data)
+ 
+      var dots = g.selectAll("circle").data(data)
+      
+      dots.enter()
+        .append("circle")
+      
+      function update() {
+        // We need to reposition our SVG and our containing group when the map
+        // repositions via zoom or pan
+        // https://github.com/zetter/voronoi-maps/blob/master/lib/voronoi_map.js
+        var bounds = map.getBounds();
+        var topLeft = map.latLngToLayerPoint(bounds.getNorthWest())
+        var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast())
+        console.log(bounds, topLeft, bottomRight)
+        svg.style("width", map.getSize().x + "px")
+          .style("height", map.getSize().y + "px")
+          .style("left", topLeft.x + "px")
+          .style("top", topLeft.y + "px");
+        g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
 
-    map.addLayer({
-        "id": "points",
-        "type": "symbol",
-        "source": {
-            "type": "geojson",
-            "data": {
-                "type": "FeatureCollection",
-                "features": [{
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [-46.61,-23.59]
-                    },
-                    "properties": {
-                        "title": "Mapbox DC",
-                        "icon": "monument"
-                    }
-                }, {
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [-46.607,-23.569]
-                    },
-                    "properties": {
-                        "title": "Mapbox SF",
-                        "icon": "harbor"
-                    }
-                }]
-            }
-        },
-        "layout": {
-            "icon-image": "{icon}-15",
-            "text-field": "{title}",
-            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-            "text-offset": [0, 0.6],
-            "text-anchor": "top"
-        }
-    });
-});
+        dots.attr({
+          cx: function(d) { return project(d).x },
+          cy: function(d) { return project(d).y },
+          r: 5
+        })
+      
+      }
+      update();
+      
+      map.on("viewreset", function() {
+        update();
+      })
+      map.on("move", update)
 
+    })
 					</script>
             </div>
             <!-- /.row -->
