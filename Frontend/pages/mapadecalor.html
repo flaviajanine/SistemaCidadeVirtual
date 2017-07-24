@@ -34,6 +34,7 @@
     <![endif]-->
 	
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script> 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
 	<style>
 	#map {
 		 position:absolute; 
@@ -282,8 +283,8 @@
                 <div class="col-lg-12" id='map'></div>
 					<script>
 					L.mapbox.accessToken = 'pk.eyJ1IjoiZmxhdmlhamFuaW5lIiwiYSI6ImNqNWg3azAybDEwYTAyd3BncWx0azh4aHcifQ.QgJrzpH1OzgiyvNoPUPIuA';
-					var map = L.mapbox.map('map', 'mapbox.pencil', {maxZoom: 18, minZoom: 14})
-    .setView([-46.607,-23.569], 15);
+					var map = L.mapbox.map('map', 'mapbox.streets', {maxZoom: 18, minZoom: 14})
+    .setView([-23.569,-46.607], 15);
     
     function project(latlng){
       var array = [+latlng.lat, +latlng.lon]
