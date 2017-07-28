@@ -13,10 +13,13 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-  <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
-  <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+
+    <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
     <!-- MetisMenu CSS -->
     <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
 
@@ -32,17 +35,18 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-	
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script> 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-	<style>
-	#map {
-		 position:absolute; 
-		 bottom:0; 
-		 width:100%; 
-		 height:700px;
-	}
-	</style>
+
+    <style>
+        #map {
+            position: absolute;
+            bottom: 0;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+            height: 70%;
+            width: 80%;
+        }
+    </style>
 
 </head>
 
@@ -66,8 +70,8 @@
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        
-                    <!-- /.dropdown-messages -->
+
+                        <!-- /.dropdown-messages -->
                 </li>
                 <!-- /.dropdown -->
                 <li class="dropdown">
@@ -83,7 +87,8 @@
                                         <span class="pull-right text-muted">40% Complete</span>
                                     </p>
                                     <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: 40%">
                                             <span class="sr-only">40% Complete (success)</span>
                                         </div>
                                     </div>
@@ -115,7 +120,8 @@
                                         <span class="pull-right text-muted">60% Complete</span>
                                     </p>
                                     <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: 60%">
                                             <span class="sr-only">60% Complete (warning)</span>
                                         </div>
                                     </div>
@@ -131,7 +137,8 @@
                                         <span class="pull-right text-muted">80% Complete</span>
                                     </p>
                                     <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: 80%">
                                             <span class="sr-only">80% Complete (danger)</span>
                                         </div>
                                     </div>
@@ -241,13 +248,13 @@
                             </span>
                             </div>
                             <!-- /input-group -->
-                                                </li>
+                        </li>
                         <li>
                             <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="dados.html"><i class="fa fa-bar-chart-o fa-fw"></i> Dados<span class="fa arrow"></span></a>
-                           
+
                         </li>
                         <li>
                             <a href="metodologia.html"><i class="fa fa-table fa-fw"></i> Metodologia Kmeans</a>
@@ -266,7 +273,7 @@
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
-						</li>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -278,64 +285,67 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Mapa de Calor</h1>
-					
-                </div>
-                <div class="col-lg-12" id='map'></div>
-					<script>
-					L.mapbox.accessToken = 'pk.eyJ1IjoiZmxhdmlhamFuaW5lIiwiYSI6ImNqNWg3azAybDEwYTAyd3BncWx0azh4aHcifQ.QgJrzpH1OzgiyvNoPUPIuA';
-					var map = L.mapbox.map('map', 'mapbox.streets', {maxZoom: 18, minZoom: 14})
-    .setView([-23.70111111, -46.69722222], 15);
-    
-    function project(latlng){
-      var array = [+latlng.lat, +latlng.lon]
-      var point = map.latLngToLayerPoint(L.latLng(latlng));
 
-      return point;
+                </div>
+                <div class="panel panel-default" id="map">
+                </div>
+                <script>
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZW5qYWxvdCIsImEiOiJjaWhtdmxhNTIwb25zdHBsejk0NGdhODJhIn0.2-F2hS_oTZenAWc0BMf_uw'
+
+    //Setup our Leaflet map using Mapbox.js
+    var map = L.mapbox.map('map', 'mapbox.streets', { maxZoom: 18, minZoom: 10 })
+        .setView([-23.5249495, -46.695613], 13);
+
+    function project(latlng) {
+        var array = [+latlng.lat, +latlng.lon]
+        var point = map.latLngToLayerPoint(L.latLng(latlng));
+
+        return point;
     }
-    
+
     // Setup our svg layer that we can manipulate with d3
     var svg = d3.select(map.getPanes().overlayPane)
-      .append("svg");
+        .append("svg");
     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
-    
-    d3.csv("online.csv", function(err, data) {
-      //console.log("data:", data)
- 
-      var dots = g.selectAll("circle").data(data)
-      
-      dots.enter()
-        .append("circle")
-      
-      function update() {
-        // We need to reposition our SVG and our containing group when the map
-        // repositions via zoom or pan
-        // https://github.com/zetter/voronoi-maps/blob/master/lib/voronoi_map.js
-        var bounds = map.getBounds();
-        var topLeft = map.latLngToLayerPoint(bounds.getNorthWest())
-        var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast())
-        console.log(bounds, topLeft, bottomRight)
-        svg.style("width", map.getSize().x + "px")
-          .style("height", map.getSize().y + "px")
-          .style("left", topLeft.x + "px")
-          .style("top", topLeft.y + "px");
-        g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
 
-        dots.attr({
-          cx: function(d) { return project(d).x },
-          cy: function(d) { return project(d).y },
-          r: 5
-        })
-      
-      }
-      update();
-      
-      map.on("viewreset", function() {
+    d3.csv("online.csv", function (err, data) {
+        //console.log("data:", data)
+
+        var dots = g.selectAll("circle").data(data)
+
+        dots.enter()
+            .append("circle")
+
+        function update() {
+            // We need to reposition our SVG and our containing group when the map
+            // repositions via zoom or pan
+            // https://github.com/zetter/voronoi-maps/blob/master/lib/voronoi_map.js
+            var bounds = map.getBounds();
+            var topLeft = map.latLngToLayerPoint(bounds.getNorthWest())
+            var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast())
+            console.log(bounds, topLeft, bottomRight)
+            svg.style("width", map.getSize().x + "px")
+                .style("height", map.getSize().y + "px")
+                .style("left", topLeft.x + "px")
+                .style("top", topLeft.y + "px");
+            g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
+
+            dots.attr({
+                cx: function (d) { return project(d).x },
+                cy: function (d) { return project(d).y },
+                r: 5
+            })
+
+        }
         update();
-      })
-      map.on("move", update)
+
+        map.on("viewreset", function () {
+            update();
+        })
+        map.on("move", update)
 
     })
-					</script>
+</script>
             </div>
             <!-- /.row -->
         </div>
@@ -356,6 +366,8 @@
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
 
+
 </body>
+
 
 </html>
