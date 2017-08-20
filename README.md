@@ -11,5 +11,5 @@
 
 ## Terceira versão
 * Back-end em python;
-* Pontos do arquivo online.csv no mapa.
-* oi
+* Pontos do arquivo online.csv no mapa;
+* Novas páginas adicionadas.
