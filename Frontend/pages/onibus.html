@@ -9,19 +9,22 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Agentes</title>
+    <title>Ônibus</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+    <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
     <!-- MetisMenu CSS -->
     <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -33,6 +36,18 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <style>
+        #map {
+            position: absolute;
+            bottom: 0;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+            height: 70%;
+            width: 80%;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -40,7 +55,7 @@
     <div id="wrapper">
 
         <!-- Navigation -->
-<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+       <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -118,37 +133,68 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Agentes</h1>
+                    <h1 class="page-header">Ônibus</h1>
+
                 </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <!-- /.col-lg-12 -->
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Aproveitamento da Base
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div class="flot-chart">
-                                <div class="flot-chart-content" id="flot-pie-chart"></div>
-							</div>
-                        </div>
-                    <!-- /.panel -->
+                <div class="panel panel-default" id="map">
                 </div>
-                    <!-- /.panel -->
-                </div>
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <img src="img/dados.png" width="100%"></img>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
+                <script>
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZW5qYWxvdCIsImEiOiJjaWhtdmxhNTIwb25zdHBsejk0NGdhODJhIn0.2-F2hS_oTZenAWc0BMf_uw'
+
+    //Setup our Leaflet map using Mapbox.js
+    var map = L.mapbox.map('map', 'mapbox.streets', { maxZoom: 18, minZoom: 10 })
+        .setView([-23.5249495, -46.695613], 13);
+
+    function project(latlng) {
+        var array = [+latlng.lat, +latlng.lon]
+        var point = map.latLngToLayerPoint(L.latLng(latlng));
+
+        return point;
+    }
+
+    // Setup our svg layer that we can manipulate with d3
+    var svg = d3.select(map.getPanes().overlayPane)
+        .append("svg");
+    var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+    d3.csv("online.csv", function (err, data) {
+        //console.log("data:", data)
+
+        var dots = g.selectAll("circle").data(data)
+
+        dots.enter()
+            .append("circle")
+
+        function update() {
+            // We need to reposition our SVG and our containing group when the map
+            // repositions via zoom or pan
+            // https://github.com/zetter/voronoi-maps/blob/master/lib/voronoi_map.js
+            var bounds = map.getBounds();
+            var topLeft = map.latLngToLayerPoint(bounds.getNorthWest())
+            var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast())
+            console.log(bounds, topLeft, bottomRight)
+            svg.style("width", map.getSize().x + "px")
+                .style("height", map.getSize().y + "px")
+                .style("left", topLeft.x + "px")
+                .style("top", topLeft.y + "px");
+            g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
+
+            dots.attr({
+                cx: function (d) { return project(d).x },
+                cy: function (d) { return project(d).y },
+                r: 5
+            })
+
+        }
+        update();
+
+        map.on("viewreset", function () {
+            update();
+        })
+        map.on("move", update)
+
+    })
+</script>
             </div>
             <!-- /.row -->
         </div>
@@ -166,18 +212,11 @@
     <!-- Metis Menu Plugin JavaScript -->
     <script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
-    <!-- Flot Charts JavaScript -->
-    <script src="../vendor/flot/excanvas.min.js"></script>
-    <script src="../vendor/flot/jquery.flot.js"></script>
-    <script src="../vendor/flot/jquery.flot.pie.js"></script>
-    <script src="../vendor/flot/jquery.flot.resize.js"></script>
-    <script src="../vendor/flot/jquery.flot.time.js"></script>
-    <script src="../vendor/flot-tooltip/jquery.flot.tooltip.min.js"></script>
-    <script src="../data/flot-data.js"></script>
-
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
 
+
 </body>
+
 
 </html>
