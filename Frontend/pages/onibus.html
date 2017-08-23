@@ -157,7 +157,7 @@
         .append("svg");
     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
-    d3.csv("online.csv", function (err, data) {
+    d3.csv("onibus_online.csv", function (err, data) {
         //console.log("data:", data)
 
         var dots = g.selectAll("circle").data(data)
